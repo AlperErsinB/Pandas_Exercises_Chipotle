@@ -1,0 +1,70 @@
+import pandas as pd
+
+#Assign it to a variable called chipo.
+url = "https://raw.githubusercontent.com/justmarkham/DAT8/master/data/chipotle.tsv"
+chipo = pd.read_csv(url, sep="\t")
+chipo.head()
+
+#See the first 10 entries
+chipo.head(10)
+
+#What is the number of observations in the dataset?
+# Solution 1
+chipo.shape[0]
+
+# Solution 2
+chipo.info()
+
+#What is the number of columns in the dataset?
+chipo.shape[1]
+#len(chipo.columns) ikinci cozum
+
+#Print the name of all the columns
+chipo.columns
+
+#How is the dataset indexed?
+chipo.index
+
+#Which was the most-ordered item?
+chipo.groupby(by = "item_name").sum().sort_values(by="quantity", ascending = False).head(1)
+
+#For the most-ordered item, how many items were ordered?
+chipo.groupby(by = "item_name").sum().sort_values(by="quantity", ascending = False).head(1)
+
+#What was the most ordered item in the choice_description column?
+chipo.groupby(by = "choice_description").sum().sort_values(["quantity"], ascending = False).head(1)
+
+#How many items were orderd in total?
+chipo.quantity.sum()
+
+#Check the item price typ
+chipo["item_price"].dtype
+
+
+#Create a lambda function and change the type of item price
+
+#type(float(chipo["item_price"][1][1:-1]))
+
+floatize = lambda x: float(x[1:-1])
+chipo["item_price"] = chipo["item_price"].apply(floatize)
+
+chipo.head()
+
+chipo["item_price"].dtype
+
+#How much was the revenue for the period in the dataset?
+(chipo["item_price"] * chipo["quantity"]).sum()
+
+#How many orders were made in the period?
+chipo["order_id"].value_counts().count()
+
+
+#What is the average revenue amount per order?
+
+# Solution 
+chipo["revenue"] = chipo["quantity"] * chipo["item_price"]
+chipo.groupby(by="order_id").sum().mean()["revenue"]
+
+#How many different items are sold?
+chipo.item_name.value_counts().count()
+
